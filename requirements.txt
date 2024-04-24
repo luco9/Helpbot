@@ -1,0 +1,15 @@
+python>=3.10.0,<3.12
+requests==2.31.0
+wikipedia-api==0.6.0
+google-images-search==1.4.6
+imageio==2.34.0
+gtts==2.5.1
+translate==3.6.1
+spotipy==2.23.0
+beautifulsoup4==4.12.3
+pytelegrambotapi==4.17.0
+openai==0.28
+youtube-search==2.1.2
+pytube==15.0.0
+flask==3.0.3
+
