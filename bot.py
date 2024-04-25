@@ -114,10 +114,9 @@ def process_message(message):
     user_id = user.id
     username = user.username
     full_name = user.full_name
-    bio = user.bio if user.bio else "NO BIO"
     photo_url = user.photo_url
 
-    message_text = f"*🆔 User ID:* {user_id}\n*👤 @{username}*\n*📛 Full Name:* {full_name}\n*📝 Bio:* {bio}"
+    message_text = f"*🆔 User ID:* {user_id}\n*👤 @{username}*\n*📛 Full Name:* {full_name}\n"
     message_text_with_photo = f"[{message_text}]({photo_url})"
 
     bot.reply_to(message, message_text_with_photo, parse_mode='MarkdownV2')
