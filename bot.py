@@ -96,30 +96,17 @@ def leave_chat(message):
         bot.send_message(message.chat.id, 'Good Bay')
         bot.leave_chat(message.chat.id)
 ########################################################################################################
-@bot.message_handler(regexp=r'^ايدي')
-def handle_id_message(message):
-    try:
-        process_message(message)
-    except Exception as e:
-        logging.error(f"An error occurred: {str(e)}")
-        bot.reply_to(message, "حدث خطأ أثناء معالجة طلبك")
+@bot.message_handler(func=lambda message: message.text.lower() == 'ايدي')
+def get_account_info(message):
+    bot_info = bot.get_me()
 
+    bot_id = bot_info.id
+    bot_username = bot_info.username
+    bot_photo = bot_info.photo[-1].file_id  #تيل بي
+    bot_bio = bot_info.description
 
-def process_message(message):
-    if message.reply_to_message:
-        user = message.reply_to_message.from_user
-    else:
-        user = message.from_user
-
-    user_id = user.id
-    username = user.username
-    full_name = user.full_name
-    photo_url = user.photo_url
-
-    message_text = f"*🆔 User ID:* {user_id}\n*👤 @{username}*\n*📛 Full Name:* {full_name}\n"
-    message_text_with_photo = f"[{message_text}]({photo_url})"
-
-    bot.reply_to(message, message_text_with_photo, parse_mode='MarkdownV2')
+    message_text = f"Bot ID: {bot_id}\nBot Username: @{bot_username}\nBot Bio: {bot_bio}"
+    bot.send_photo(message.chat.id, bot_photo, caption=message_text)
 
 ##################################################################################################################
 #ميزه عدم كتم المطور
