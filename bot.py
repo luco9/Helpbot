@@ -95,7 +95,7 @@ def leave_chat(message):
     if message.from_user.id == 1045489068:
         bot.send_message(message.chat.id, 'Good Bay')
         bot.leave_chat(message.chat.id)
-
+########################################################################################################
 @bot.message_handler(regexp=r'^ايدي')
 def handle_id_message(message):
     try:
@@ -106,24 +106,23 @@ def handle_id_message(message):
 
 
 def process_message(message):
-
     if message.reply_to_message:
         user = message.reply_to_message.from_user
     else:
         user = message.from_user
 
-    
     user_id = user.id
     username = user.username
     full_name = user.full_name
     bio = user.bio if user.bio else "NO BIO"
     photo_url = user.photo_url
-  
+
     message_text = f"*🆔 User ID:* {user_id}\n*👤 @{username}*\n*📛 Full Name:* {full_name}\n*📝 Bio:* {bio}"
     message_text_with_photo = f"[{message_text}]({photo_url})"
-    
-     bot.reply_to(message, message_text_with_photo, parse_mode='MarkdownV2')
 
+    bot.reply_to(message, message_text_with_photo, parse_mode='MarkdownV2')
+
+##################################################################################################################
 #ميزه عدم كتم المطور
 @bot.message_handler(func=lambda message: message.text.startswith('كتم'))
 def mute_user(message):
