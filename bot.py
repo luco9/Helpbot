@@ -125,7 +125,7 @@ def process_message(message):
     message_text = f"*🆔 User ID:* {user_id}\n*👤 @{username}*\n*📛 Full Name:* {full_name}\n*📝 Bio:* {bio}"
     message_text_with_photo = f"[{message_text}]({photo_url})"
     
-    bot.reply_to(message, message_text, parse_mode='MarkdownV2')
+     bot.reply_to(message, message_text_with_photo, parse_mode='MarkdownV2')
 
 #ميزه عدم كتم المطور
 @bot.message_handler(func=lambda message: message.text.startswith('كتم'))
