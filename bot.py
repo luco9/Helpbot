@@ -27,6 +27,11 @@ import telebot
 API_KEY = '3724df92637d2b3aaab56a679961cf89'
 Token = '7091131799:AAHhWet-rtp8zP48g9YUxfD1yKO662Gd228'
 bot = telebot.TeleBot(Token)
+lock = threading.Lock()
+
+@bot.message_handler(func=lambda message: True)
+def handle_message(message):
+    with lock:
 iraqi_jokes_list = [
     "ليش الببغاء ما يصدق؟ عشانه دايماً يشوف اللي يقوله!",
     "واحد قروي حكموا عليه بالإعدام، قالوا له هل عندك طلب قبل تنفيذ الحكم؟ قال: نعم، أبي النوعية اللي تقطع من الوسط!",
@@ -94,62 +99,33 @@ def leave_chat(message):
         bot.send_message(message.chat.id, 'Good Bay')
         bot.leave_chat(message.chat.id)
 
-@bot.message_handler(regexp='^ايدي')
-def id(message):
+@bot.message_handler(regexp=r'^ايدي')
+def handle_id_message(message):
+    try:
+        process_message(message)
+    except Exception as e:
+        logging.error(f"An error occurred: {str(e)}")
+        bot.reply_to(message, "حدث خطأ أثناء معالجة طلبك")
+
+
+def process_message(message):
+
     if message.reply_to_message:
         user = message.reply_to_message.from_user
-        user_id = user.id
-        username = user.username
-        full_name = user.full_name
-        bio = user.bio if hasattr(user, 'bio') else "No bio available"
-        user_photos = bot.get_user_profile_photos(user_id)
-        num_photos = user_photos.total_count  # عدد الصور
-
-
-        fancy_id = f"🆔 User ID: {user_id}"
-        fancy_username = f"👤 @{username}"
-        fancy_full_name = f"📛 Full Name: {full_name}"
-        fancy_bio = f"📝 Bio: {bio}"
-        fancy_num_photos = f"🖼️ Number of Photos: {num_photos}"
-
-        if user_photos.photos:
-            file_id = user_photos.photos[0][-1].file_id  # المعرف الفعلي للصورة
-            bot.send_photo(message.chat.id, file_id, caption=f'{fancy_id}\n{fancy_username}\n{fancy_full_name}\n{fancy_bio}\n{fancy_num_photos}')
-        else:
-            bot.reply_to(message, f'''
-            *{fancy_id}*
-            *{fancy_username}*
-            *{fancy_full_name}*
-            *{fancy_bio}*
-            *{fancy_num_photos}*
-            ''', parse_mode='markdown')
     else:
-        user_id = message.from_user.id
-        username = message.from_user.username
-        full_name = message.from_user.full_name
-        bio = message.from_user.bio if hasattr(message.from_user, 'bio') else "No bio available"
-        user_photos = bot.get_user_profile_photos(user_id)
-        num_photos = user_photos.total_count  # عدد الصور
+        user = message.from_user
 
-
-        fancy_id = f"🆔 User ID: {user_id}"
-        fancy_username = f"👤 @{username}"
-        fancy_full_name = f"📛 Full Name: {full_name}"
-        fancy_bio = f"📝 Bio: {bio}"
-        fancy_num_photos = f"🖼️ Number of Photos: {num_photos}"
-
-        if user_photos.photos:
-            file_id = user_photos.photos[0][-1].file_id  
-            bot.send_photo(message.chat.id, file_id, caption=f'{fancy_id}\n{fancy_username}\n{fancy_full_name}\n{fancy_bio}\n{fancy_num_photos}')
-        else:
-            bot.reply_to(message, f'''
-            *{fancy_id}*
-            *{fancy_username}*
-            *{fancy_full_name}*
-            *{fancy_bio}*
-            *{fancy_num_photos}*
-            ''', parse_mode='markdown')
-
+    
+    user_id = user.id
+    username = user.username
+    full_name = user.full_name
+    bio = user.bio if user.bio else "NO BIO"
+    photo_url = user.photo_url
+  
+    message_text = f"*🆔 User ID:* {user_id}\n*👤 @{username}*\n*📛 Full Name:* {full_name}\n*📝 Bio:* {bio}"
+    message_text_with_photo = f"[{message_text}]({photo_url})"
+    
+    bot.reply_to(message, message_text, parse_mode='MarkdownV2')
 
 #ميزه عدم كتم المطور
 @bot.message_handler(func=lambda message: message.text.startswith('كتم'))
