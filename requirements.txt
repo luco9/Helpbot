@@ -11,4 +11,5 @@ openai==0.28
 youtube-search==2.1.2
 pytube==15.0.0
 flask==3.0.3
+gunicorn==20.1.0
 
