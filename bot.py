@@ -96,17 +96,31 @@ def leave_chat(message):
         bot.send_message(message.chat.id, 'Good Bay')
         bot.leave_chat(message.chat.id)
 ########################################################################################################
+import telebot
+
+# Replace 'YOUR_TOKEN' with your actual bot token
+TOKEN = 'YOUR_TOKEN'
+bot = telebot.TeleBot(TOKEN)
+
 @bot.message_handler(func=lambda message: message.text.lower() == 'ايدي')
 def get_account_info(message):
     bot_info = bot.get_me()
 
     bot_id = bot_info.id
     bot_username = bot_info.username
-    bot_photo = bot_info.photo[-1].file_id  #تيل بي
     bot_bio = bot_info.description
 
-    message_text = f"Bot ID: {bot_id}\nBot Username: @{bot_username}\nBot Bio: {bot_bio}"
-    bot.send_photo(message.chat.id, bot_photo, caption=message_text)
+    # Get the profile photos from user-person
+    photos = bot.get_user_profile_photos(bot_id).photos
+    if photos:
+        bot_photo = photos[-1][-1].file_id  # assuming the last photo is the profile photo from user
+        message_text = f"Bot ID: {bot_id}\nBot Username: @{bot_username}\nBot Bio: {bot_bio}"
+        bot.send_photo(message.chat.id, bot_photo, caption=message_text)
+    else:
+        bot.send_message(message.chat.id, "لا يوجد صورة ملف شخصي متوفرة.")
+
+bot.polling()
+
 
 ##################################################################################################################
 #ميزه عدم كتم المطور
