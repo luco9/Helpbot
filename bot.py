@@ -29,9 +29,6 @@ Token = '7091131799:AAHhWet-rtp8zP48g9YUxfD1yKO662Gd228'
 bot = telebot.TeleBot(Token)
 lock = threading.Lock()
 
-@bot.message_handler(func=lambda message: True)
-def handle_message(message):
-    with lock:
 iraqi_jokes_list = [
     "ليش الببغاء ما يصدق؟ عشانه دايماً يشوف اللي يقوله!",
     "واحد قروي حكموا عليه بالإعدام، قالوا له هل عندك طلب قبل تنفيذ الحكم؟ قال: نعم، أبي النوعية اللي تقطع من الوسط!",
